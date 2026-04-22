@@ -36,7 +36,7 @@
   --navbar-h:    64px;
 }
 
-/* ─── Base ───────────────────────────────────────────────────── */
+/* ─── Base ───────────────────────────────────────────────────── */ 
 html {
   scroll-behavior: smooth;
 }
@@ -106,6 +106,7 @@ a:hover { color: var(--gold-dark); }
 }
 
 /* ─── Grid ───────────────────────────────────────────────────── */
+/* need to recheck */
 .vehicles-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
