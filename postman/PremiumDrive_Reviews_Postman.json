@@ -1,0 +1,35 @@
+{
+    "info": {
+      "name": "PremiumDrive Reviews API",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+      {"key": "base_url", "value": "http://localhost:8000", "type": "string"},
+      {"key": "access_token", "value": "", "type": "string"},
+      {"key": "vehicle_id", "value": "1", "type": "string"}
+    ],
+    "item": [
+      {
+        "name": "GET /reviews/?vehicle={id}",
+        "request": {
+          "method": "GET",
+          "url": {"raw": "{{base_url}}/api/reviews/?vehicle={{vehicle_id}}", "host": ["{{base_url}}"], "path": ["api", "reviews", ""], "query": [{"key": "vehicle", "value": "{{vehicle_id}}"}]}
+        }
+      },
+      {
+        "name": "POST /reviews/",
+        "request": {
+          "method": "POST",
+          "header": [
+            {"key": "Content-Type", "value": "application/json"},
+            {"key": "Authorization", "value": "Bearer {{access_token}}"}
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"car_name\": \"Porsche 911 Turbo S\",\n  \"vehicle_id\": {{vehicle_id}},\n  \"text\": \"Отличный автомобиль! Очень доволен покупкой. Мощный, стильный, комфортный.\",\n  \"rating\": 5\n}"
+          },
+          "url": {"raw": "{{base_url}}/api/reviews/", "host": ["{{base_url}}"], "path": ["api", "reviews", ""]}
+        }
+      }
+    ]
+  }
