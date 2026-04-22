@@ -1,0 +1,136 @@
+{
+  "info": {
+    "name": "PremiumDrive — Auth",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Authentication endpoints for PremiumDrive API (JWT via SimpleJWT)."
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000", "type": "string" },
+    { "key": "access_token", "value": "", "type": "string" },
+    { "key": "refresh_token", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "1. Register",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"admin\",\n  \"email\": \"admin@premiumdrive.com\",\n  \"password\": \"admin123\",\n  \"password2\": \"admin123\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/auth/register/",
+          "host": ["{{base_url}}"],
+          "path": ["api", "auth", "register", ""]
+        },
+        "description": "Creates a new user account. Returns success message on 201."
+      },
+      "response": [
+        {
+          "name": "201 Created",
+          "status": "Created",
+          "code": 201,
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"message\": \"Регистрация успешна\"\n}"
+        },
+        {
+          "name": "400 Bad Request — user already exists",
+          "status": "Bad Request",
+          "code": 400,
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"error\": \"Пользователь с таким именем уже существует\"\n}"
+        },
+        {
+          "name": "400 Bad Request — passwords don't match",
+          "status": "Bad Request",
+          "code": 400,
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"error\": \"Пароли не совпадают\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "2. Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const json = pm.response.json();",
+              "if (json.access) pm.collectionVariables.set('access_token', json.access);",
+              "if (json.refresh) pm.collectionVariables.set('refresh_token', json.refresh);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/auth/login/",
+          "host": ["{{base_url}}"],
+          "path": ["api", "auth", "login", ""]
+        },
+        "description": "Authenticates the user. Automatically saves access_token and refresh_token to collection variables."
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "status": "OK",
+          "code": 200,
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"access\": \"eyJ...\",\n  \"refresh\": \"eyJ...\"\n}"
+        },
+        {
+          "name": "401 Unauthorized — invalid credentials",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"detail\": \"Invalid credentials.\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "3. Logout",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{access_token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/auth/logout/",
+          "host": ["{{base_url}}"],
+          "path": ["api", "auth", "logout", ""]
+        },
+        "description": "Blacklists the refresh token and logs out the current user."
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "status": "OK",
+          "code": 200,
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"message\": \"Successfully logged out.\"\n}"
+        },
+        {
+          "name": "400 Bad Request — missing refresh token",
+          "status": "Bad Request",
+          "code": 400,
+          "header": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": "{\n  \"detail\": \"Refresh token is required.\"\n}"
+        }
+      ]
+    }
+  ]
+}

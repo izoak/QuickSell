@@ -1,0 +1,281 @@
+{
+  "info": {
+    "name": "PremiumDrive — Vehicles & Categories",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Vehicles and Categories endpoints for PremiumDrive API."
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000", "type": "string" },
+    { "key": "access_token", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Vehicles",
+      "item": [
+        {
+          "name": "1. Get All Vehicles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/vehicles/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "vehicles", ""]
+            },
+            "description": "Returns all vehicles. Public endpoint."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"X5\",\n    \"brand\": \"BMW\",\n    \"price\": \"75000.00\",\n    \"type\": \"car\",\n    \"image\": \"https://example.com/bmw-x5.jpg\",\n    \"category\": 1,\n    \"year\": 2024,\n    \"description\": \"Премиальный внедорожник\",\n    \"engine\": \"3.0 TwinPower Turbo\",\n    \"horsepower\": 340,\n    \"available\": true\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "2. Get Vehicles by Type",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/vehicles/?type=car",
+              "host": ["{{base_url}}"],
+              "path": ["api", "vehicles", ""],
+              "query": [{ "key": "type", "value": "car" }]
+            },
+            "description": "Filters vehicles by type (car, motorcycle, etc.)."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"X5\",\n    \"brand\": \"BMW\",\n    \"type\": \"car\",\n    \"price\": \"75000.00\",\n    \"available\": true\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "3. Get Vehicles by Brand",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/vehicles/?brand=BMW",
+              "host": ["{{base_url}}"],
+              "path": ["api", "vehicles", ""],
+              "query": [{ "key": "brand", "value": "BMW" }]
+            },
+            "description": "Filters vehicles by brand name (case-insensitive)."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"X5\",\n    \"brand\": \"BMW\",\n    \"type\": \"car\",\n    \"price\": \"75000.00\",\n    \"available\": true\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "4. Get Vehicle by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/vehicles/1/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "vehicles", "1", ""]
+            },
+            "description": "Returns a single vehicle by its ID. Public endpoint."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": 1,\n  \"name\": \"X5\",\n  \"brand\": \"BMW\",\n  \"price\": \"75000.00\",\n  \"type\": \"car\",\n  \"image\": \"https://example.com/bmw-x5.jpg\",\n  \"category\": 1,\n  \"year\": 2024,\n  \"description\": \"Премиальный внедорожник\",\n  \"engine\": \"3.0 TwinPower Turbo\",\n  \"horsepower\": 340,\n  \"available\": true\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"detail\": \"Not found.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "5. Create Vehicle",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"X5\",\n  \"brand\": \"BMW\",\n  \"price\": \"75000.00\",\n  \"type\": \"car\",\n  \"image\": \"https://example.com/bmw-x5.jpg\",\n  \"category\": 1,\n  \"year\": 2024,\n  \"description\": \"Премиальный внедорожник\",\n  \"engine\": \"3.0 TwinPower Turbo\",\n  \"horsepower\": 340,\n  \"available\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/vehicles/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "vehicles", ""]
+            },
+            "description": "Creates a new vehicle. Requires authentication."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": 2,\n  \"name\": \"X5\",\n  \"brand\": \"BMW\",\n  \"price\": \"75000.00\",\n  \"type\": \"car\",\n  \"available\": true\n}"
+            },
+            {
+              "name": "400 Bad Request",
+              "status": "Bad Request",
+              "code": 400,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"name\": [\"This field is required.\"]\n}"
+            }
+          ]
+        },
+        {
+          "name": "6. Update Vehicle",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"X5\",\n  \"brand\": \"BMW\",\n  \"price\": \"80000.00\",\n  \"type\": \"car\",\n  \"image\": \"https://example.com/bmw-x5.jpg\",\n  \"category\": 1,\n  \"year\": 2024,\n  \"description\": \"Обновлённый премиальный внедорожник\",\n  \"engine\": \"3.0 TwinPower Turbo\",\n  \"horsepower\": 340,\n  \"available\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/vehicles/1/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "vehicles", "1", ""]
+            },
+            "description": "Fully updates a vehicle by ID. Requires authentication."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": 1,\n  \"name\": \"X5\",\n  \"brand\": \"BMW\",\n  \"price\": \"80000.00\",\n  \"available\": true\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"detail\": \"Not found.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "7. Delete Vehicle",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/vehicles/1/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "vehicles", "1", ""]
+            },
+            "description": "Deletes a vehicle by ID. Requires authentication."
+          },
+          "response": [
+            {
+              "name": "204 No Content",
+              "status": "No Content",
+              "code": 204,
+              "header": [],
+              "body": ""
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"detail\": \"Not found.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "1. Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/categories/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categories", ""]
+            },
+            "description": "Returns all vehicle categories. Public endpoint."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  { \"id\": 1, \"name\": \"Седаны\" },\n  { \"id\": 2, \"name\": \"Внедорожники\" }\n]"
+            }
+          ]
+        },
+        {
+          "name": "2. Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Седаны\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/categories/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categories", ""]
+            },
+            "description": "Creates a new vehicle category. Requires authentication."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": 3,\n  \"name\": \"Седаны\"\n}"
+            },
+            {
+              "name": "400 Bad Request",
+              "status": "Bad Request",
+              "code": 400,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"name\": [\"This field is required.\"]\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

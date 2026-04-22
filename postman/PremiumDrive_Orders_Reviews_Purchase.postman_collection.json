@@ -1,0 +1,254 @@
+{
+  "info": {
+    "name": "PremiumDrive — Orders, Reviews & Purchase",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Orders, Reviews and Purchase endpoints for PremiumDrive API."
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000", "type": "string" },
+    { "key": "access_token", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "1. Get My Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/orders/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", ""]
+            },
+            "description": "Returns all orders of the authenticated user."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": 1,\n    \"car_name\": \"BMW X5\",\n    \"vehicle_id\": 1,\n    \"full_name\": \"Иван Иванов\",\n    \"phone\": \"+7 777 123 4567\",\n    \"date\": \"2026-05-01\",\n    \"comment\": \"Подготовьте к 10:00\",\n    \"status\": \"new\",\n    \"is_purchased\": false,\n    \"created_at\": \"2026-04-22T10:00:00Z\"\n  }\n]"
+            },
+            {
+              "name": "401 Unauthorized",
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"detail\": \"Authentication credentials were not provided.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "2. Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"car_name\": \"BMW X5\",\n  \"vehicle_id\": 1,\n  \"full_name\": \"Иван Иванов\",\n  \"phone\": \"+7 777 123 4567\",\n  \"date\": \"2026-05-01\",\n  \"comment\": \"Подготовьте к 10:00\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/orders/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", ""]
+            },
+            "description": "Creates a new test drive booking. Requires authentication."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": 2,\n  \"car_name\": \"BMW X5\",\n  \"vehicle_id\": 1,\n  \"full_name\": \"Иван Иванов\",\n  \"phone\": \"+7 777 123 4567\",\n  \"date\": \"2026-05-01\",\n  \"status\": \"new\",\n  \"is_purchased\": false,\n  \"created_at\": \"2026-04-22T10:05:00Z\"\n}"
+            },
+            {
+              "name": "400 Bad Request",
+              "status": "Bad Request",
+              "code": 400,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"car_name\": [\"This field is required.\"]\n}"
+            }
+          ]
+        },
+        {
+          "name": "3. Cancel Order",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/orders/1/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "1", ""]
+            },
+            "description": "Cancels an order if its status is 'new' or 'pending'. Requires authentication."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": 1,\n  \"status\": \"cancelled\",\n  \"car_name\": \"BMW X5\"\n}"
+            },
+            {
+              "name": "400 Bad Request — cannot cancel",
+              "status": "Bad Request",
+              "code": 400,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"detail\": \"Cannot cancel an order with status \\\"completed\\\".\"\n}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"detail\": \"Order not found.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "1. Get Reviews by Vehicle",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/reviews/?vehicle=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reviews", ""],
+              "query": [{ "key": "vehicle", "value": "1" }]
+            },
+            "description": "Returns all reviews for a specific vehicle. Public endpoint."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "[\n  {\n    \"id\": 1,\n    \"car_name\": \"BMW X5\",\n    \"vehicle_id\": 1,\n    \"text\": \"Отличный автомобиль!\",\n    \"rating\": 5,\n    \"username\": \"admin\",\n    \"created_at\": \"2026-04-22T10:00:00Z\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "2. Create Review",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"car_name\": \"BMW X5\",\n  \"vehicle_id\": 1,\n  \"text\": \"Отличный автомобиль, очень доволен!\",\n  \"rating\": 5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/reviews/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reviews", ""]
+            },
+            "description": "Creates a review for a vehicle. Rating must be between 1 and 5. Requires authentication."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": 2,\n  \"car_name\": \"BMW X5\",\n  \"vehicle_id\": 1,\n  \"text\": \"Отличный автомобиль, очень доволен!\",\n  \"rating\": 5,\n  \"username\": \"admin\",\n  \"created_at\": \"2026-04-22T11:00:00Z\"\n}"
+            },
+            {
+              "name": "400 Bad Request — invalid rating",
+              "status": "Bad Request",
+              "code": 400,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"rating\": [\"Rating must be between 1 and 5.\"]\n}"
+            },
+            {
+              "name": "401 Unauthorized",
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"detail\": \"Authentication credentials were not provided.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Purchase",
+      "item": [
+        {
+          "name": "1. Purchase Vehicle",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicle_id\": 1,\n  \"car_name\": \"BMW X5\",\n  \"purchase_price\": 75000.00,\n  \"card_number\": \"123456789012\",\n  \"promo_code\": \"KBTU\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/orders/purchase/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "purchase", ""]
+            },
+            "description": "Purchases a vehicle. Card number must be exactly 12 digits. Promo code KBTU gives 20% discount. Requires authentication."
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Покупка успешна!\",\n  \"card_last4\": \"9012\",\n  \"order_id\": 5\n}"
+            },
+            {
+              "name": "400 Bad Request — invalid card number",
+              "status": "Bad Request",
+              "code": 400,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Номер карты должен содержать 12 цифр\"\n}"
+            },
+            {
+              "name": "400 Bad Request — invalid promo code",
+              "status": "Bad Request",
+              "code": 400,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": \"Неверный промокод\"\n}"
+            },
+            {
+              "name": "401 Unauthorized",
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"detail\": \"Authentication credentials were not provided.\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
